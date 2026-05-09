@@ -1,0 +1,93 @@
+# HTTP Method Manipulation Notes
+
+## Overview
+HTTP Method Manipulation occurs when a web application improperly handles different HTTP methods such as GET, POST, PUT, DELETE, or OPTIONS.
+
+This can sometimes lead to:
+- Authentication bypass
+- Access control issues
+- Open redirection
+- Unexpected application behavior
+
+---
+
+# Common HTTP Methods
+
+| Method | Purpose |
+|---|---|
+| GET | Retrieve data |
+| POST | Submit data |
+| PUT | Update resources |
+| DELETE | Delete resources |
+| OPTIONS | Show allowed methods |
+| PATCH | Partial updates |
+
+---
+
+# Basic Testing Workflow
+
+## Change Request Method
+
+Example:
+- GET → POST
+- POST → GET
+
+Observe:
+- Response changes
+- Access control behavior
+- Redirect handling
+- Error messages
+
+---
+
+# Example Test Request
+
+```http
+POST /admin HTTP/1.1
+Host: example.com
+```
+
+Try changing to:
+
+```http
+GET /admin HTTP/1.1
+Host: example.com
+```
+
+---
+
+# Areas to Test
+- Login endpoints
+- Redirect functionality
+- Password reset flows
+- Admin panels
+- APIs
+
+---
+
+# Common Security Risks
+- Access control bypass
+- Authentication issues
+- Open redirection
+- Sensitive information exposure
+
+---
+
+# Recommended Tools
+- Burp Suite
+- Postman
+- curl
+- OWASP ZAP
+
+---
+
+# Prevention
+- Validate allowed methods server-side
+- Implement strict access control
+- Return proper HTTP status codes
+- Disable unused methods
+
+---
+
+# Disclaimer
+These notes are intended for educational purposes and authorized security testing only.
