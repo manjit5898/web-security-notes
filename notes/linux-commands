@@ -1,0 +1,779 @@
+# Detailed Linux File Permissions Notes
+
+## Introduction
+
+Linux file permissions are one of the most important concepts in:
+
+* Linux administration
+* Cybersecurity
+* Web server security
+* Privilege escalation
+* System hardening
+* Penetration testing
+
+Permissions define:
+
+* who can access files
+* who can modify files
+* who can execute programs
+
+Understanding permissions properly helps in:
+
+* securing systems
+* identifying vulnerabilities
+* preventing unauthorized access
+
+---
+
+# Viewing File Permissions
+
+Use:
+
+```bash
+ls -l
+```
+
+Example:
+
+```bash
+-rwxr-xr-- 1 kali kali 1200 test.sh
+```
+
+---
+
+# Breaking Down the Permission String
+
+Example:
+
+```bash
+-rwxr-xr--
+```
+
+This can be divided into sections:
+
+```text
+- rwx r-x r--
+```
+
+| Section | Meaning                 |
+| ------- | ----------------------- |
+| -       | File type               |
+| rwx     | Owner permissions       |
+| r-x     | Group permissions       |
+| r--     | Other users permissions |
+
+---
+
+# File Types in Linux
+
+The first character shows the file type.
+
+| Symbol | Meaning          |
+| ------ | ---------------- |
+| -      | Regular file     |
+| d      | Directory        |
+| l      | Symbolic link    |
+| c      | Character device |
+| b      | Block device     |
+| s      | Socket           |
+| p      | Named pipe       |
+
+---
+
+# Examples of File Types
+
+## Regular File
+
+```bash
+-rw-r--r-- file.txt
+```
+
+Used for:
+
+* text files
+* scripts
+* images
+* documents
+
+---
+
+## Directory
+
+```bash
+drwxr-xr-x notes/
+```
+
+Directories store:
+
+* files
+* folders
+
+---
+
+## Symbolic Link
+
+```bash
+lrwxrwxrwx link -> /etc/passwd
+```
+
+A symbolic link points to another file.
+
+---
+
+# Permission Characters
+
+| Character | Meaning       |
+| --------- | ------------- |
+| r         | Read          |
+| w         | Write         |
+| x         | Execute       |
+| -         | No permission |
+
+---
+
+# Understanding Read Permission (r)
+
+Read permission allows:
+
+* viewing file contents
+* opening files
+* copying readable files
+
+Example:
+
+```bash
+cat notes.txt
+```
+
+Without read permission:
+
+```bash
+cat notes.txt
+cat: notes.txt: Permission denied
+```
+
+---
+
+# Understanding Write Permission (w)
+
+Write permission allows:
+
+* editing files
+* deleting files
+* modifying content
+
+Example:
+
+```bash
+echo "hello" >> notes.txt
+```
+
+Without write permission:
+
+```bash
+bash: notes.txt: Permission denied
+```
+
+---
+
+# Understanding Execute Permission (x)
+
+Execute permission allows:
+
+* running scripts
+* executing programs
+
+Example:
+
+```bash
+./script.sh
+```
+
+Without execute permission:
+
+```bash
+bash: ./script.sh: Permission denied
+```
+
+---
+
+# Linux Permission Groups
+
+Linux permissions apply to 3 groups.
+
+---
+
+## Owner
+
+The owner is usually the user who created the file.
+
+Example:
+
+```bash
+-rw-r--r-- kali kali notes.txt
+```
+
+First `kali`:
+
+* owner
+
+---
+
+## Group
+
+Users in the same group may receive shared permissions.
+
+Second `kali`:
+
+* group
+
+---
+
+## Others
+
+All remaining users on the system.
+
+---
+
+# Understanding Common Permission Types
+
+---
+
+# 777 Permissions
+
+```bash
+rwxrwxrwx
+```
+
+Meaning:
+
+| User Type | Permission |
+| --------- | ---------- |
+| Owner     | rwx        |
+| Group     | rwx        |
+| Others    | rwx        |
+
+Everyone can:
+
+* read
+* write
+* execute
+
+⚠️ Dangerous permission.
+
+Security Risk:
+
+* anyone can modify files
+* attackers may inject malicious code
+
+Example:
+
+```bash
+chmod 777 backup.sh
+```
+
+Avoid using 777 unless absolutely necessary.
+
+---
+
+# 755 Permissions
+
+```bash
+rwxr-xr-x
+```
+
+Meaning:
+
+| User Type | Permission |
+| --------- | ---------- |
+| Owner     | rwx        |
+| Group     | r-x        |
+| Others    | r-x        |
+
+Commonly used for:
+
+* scripts
+* directories
+* web server folders
+
+Example:
+
+```bash
+chmod 755 script.sh
+```
+
+---
+
+# 644 Permissions
+
+```bash
+rw-r--r--
+```
+
+Meaning:
+
+| User Type | Permission |
+| --------- | ---------- |
+| Owner     | rw-        |
+| Group     | r--        |
+| Others    | r--        |
+
+Commonly used for:
+
+* configuration files
+* notes
+* text files
+
+Example:
+
+```bash
+chmod 644 notes.txt
+```
+
+---
+
+# 600 Permissions
+
+```bash
+rw-------
+```
+
+Meaning:
+
+| User Type | Permission |
+| --------- | ---------- |
+| Owner     | rw-        |
+| Group     | ---        |
+| Others    | ---        |
+
+Commonly used for:
+
+* SSH private keys
+* credentials
+* sensitive files
+
+Example:
+
+```bash
+chmod 600 id_rsa
+```
+
+---
+
+# 400 Permissions
+
+```bash
+r--------
+```
+
+Meaning:
+
+* owner can only read
+* no writing
+* no execution
+
+---
+
+# Numeric Permission System
+
+Linux permissions also use numbers.
+
+| Number | Permission |
+| ------ | ---------- |
+| 7      | rwx        |
+| 6      | rw-        |
+| 5      | r-x        |
+| 4      | r--        |
+| 3      | -wx        |
+| 2      | -w-        |
+| 1      | --x        |
+| 0      | ---        |
+
+---
+
+# How Numeric Permissions Work
+
+Each permission has a value:
+
+| Permission | Value |
+| ---------- | ----- |
+| r          | 4     |
+| w          | 2     |
+| x          | 1     |
+
+Examples:
+
+## rwx
+
+```text
+4 + 2 + 1 = 7
+```
+
+## rw-
+
+```text
+4 + 2 = 6
+```
+
+## r-x
+
+```text
+4 + 1 = 5
+```
+
+---
+
+# chmod Command
+
+Used to change permissions.
+
+---
+
+## Add Execute Permission
+
+```bash
+chmod +x script.sh
+```
+
+---
+
+## Remove Write Permission
+
+```bash
+chmod -w file.txt
+```
+
+---
+
+## Set Full Permission Using Numbers
+
+```bash
+chmod 777 file.txt
+```
+
+---
+
+## Set Secure File Permission
+
+```bash
+chmod 600 id_rsa
+```
+
+---
+
+# Ownership in Linux
+
+---
+
+# Viewing Ownership
+
+```bash
+ls -l
+```
+
+Example:
+
+```bash
+-rw-r--r-- kali kali notes.txt
+```
+
+First `kali`:
+
+* owner
+
+Second `kali`:
+
+* group
+
+---
+
+# Changing Owner
+
+```bash
+chown user file.txt
+```
+
+---
+
+# Changing Owner and Group
+
+```bash
+chown user:user file.txt
+```
+
+---
+
+# Directory Permissions
+
+Directory permissions behave differently.
+
+---
+
+# Read Permission on Directory
+
+Allows:
+
+* listing files
+
+Example:
+
+```bash
+ls folder/
+```
+
+---
+
+# Write Permission on Directory
+
+Allows:
+
+* creating files
+* deleting files
+
+---
+
+# Execute Permission on Directory
+
+Allows:
+
+* entering directory
+
+Example:
+
+```bash
+cd folder/
+```
+
+Without execute permission:
+
+```bash
+bash: cd: Permission denied
+```
+
+---
+
+# SUID Permission
+
+Very important in privilege escalation.
+
+Example:
+
+```bash
+-rwsr-xr-x
+```
+
+Notice:
+
+```text
+s
+```
+
+Meaning:
+
+* program runs with owner privileges
+
+---
+
+# Finding SUID Files
+
+```bash
+find / -perm -4000 2>/dev/null
+```
+
+Common examples:
+
+* passwd
+* sudo
+
+Security Risk:
+
+* misconfigured SUID binaries may lead to privilege escalation
+
+---
+
+# SGID Permission
+
+Example:
+
+```bash
+-rwxr-sr-x
+```
+
+Meaning:
+
+* executes with group privileges
+
+---
+
+# Sticky Bit
+
+Example:
+
+```bash
+drwxrwxrwt
+```
+
+Common on:
+
+```bash
+/tmp
+```
+
+Meaning:
+
+* users cannot delete others' files
+
+---
+
+# Real-World Security Examples
+
+---
+
+# Weak Permission Example
+
+```bash
+-rwxrwxrwx backup.sh
+```
+
+Problem:
+
+* anyone can modify script
+* attackers may inject commands
+
+---
+
+# Secure SSH Key Example
+
+Correct:
+
+```bash
+chmod 600 id_rsa
+```
+
+Wrong:
+
+```bash
+chmod 777 id_rsa
+```
+
+SSH may reject insecure private keys.
+
+---
+
+# Web Server Permission Example
+
+Correct:
+
+```bash
+chmod 755 /var/www/html
+```
+
+Files:
+
+```bash
+chmod 644 index.php
+```
+
+---
+
+# Useful Permission Commands
+
+---
+
+# View Permissions
+
+```bash
+ls -l
+```
+
+---
+
+# Change Permissions
+
+```bash
+chmod 755 script.sh
+```
+
+---
+
+# Change Ownership
+
+```bash
+chown kali:kali file.txt
+```
+
+---
+
+# Find Writable Files
+
+```bash
+find / -writable 2>/dev/null
+```
+
+---
+
+# Find SUID Files
+
+```bash
+find / -perm -4000 2>/dev/null
+```
+
+---
+
+# Security Best Practices
+
+## Avoid 777 Permissions
+
+Bad:
+
+```bash
+chmod 777 file.txt
+```
+
+---
+
+## Use Least Privilege Principle
+
+Give only necessary permissions.
+
+---
+
+## Secure Sensitive Files
+
+Example:
+
+```bash
+chmod 600 credentials.txt
+```
+
+---
+
+## Monitor SUID Files
+
+Misconfigured SUID binaries can become privilege escalation vectors.
+
+---
+
+# Why Permissions Matter in Cybersecurity
+
+Weak permissions may lead to:
+
+* privilege escalation
+* credential theft
+* malicious code execution
+* file tampering
+* web shell uploads
+* unauthorized access
+
+Linux permissions are one of the most commonly checked areas during:
+
+* VAPT
+* system audits
+* penetration testing
+* privilege escalation assessments
+
+---
+
+# Disclaimer
+
+These notes are intended for educational purposes and authorized security testing only.
